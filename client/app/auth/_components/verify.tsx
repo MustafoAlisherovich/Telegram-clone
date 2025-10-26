@@ -14,6 +14,7 @@ import {
 	InputOTPSlot,
 } from '@/components/ui/input-otp'
 import { Label } from '@/components/ui/label'
+import { useAuth } from '@/hooks/use-auth'
 import { otpSchema } from '@/lib/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
@@ -21,16 +22,19 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 
 const Verify = () => {
+	const { email } = useAuth()
+
 	const form = useForm<z.infer<typeof otpSchema>>({
 		resolver: zodResolver(otpSchema),
 		defaultValues: {
-			email: '',
+			email,
 			otp: ' ',
 		},
 	})
 
 	function onSubmit(values: z.infer<typeof otpSchema>) {
 		console.log(values)
+		window.open('/', '_self')
 	}
 	return (
 		<div className='w-full'>
@@ -55,6 +59,7 @@ const Verify = () => {
 										placeholder='info@mustafoalisherovich.ru'
 										className='h-10 bg-secondary'
 										{...field}
+										disabled
 									/>
 								</FormControl>
 								<FormMessage className='text-xs text-red-500' />
@@ -75,33 +80,15 @@ const Verify = () => {
 										className='w-full'
 									>
 										<InputOTPGroup className='w-full '>
-											<InputOTPSlot
-												index={0}
-												className='w-full dark:bg-primary-foreground bg-secondary'
-											/>
-											<InputOTPSlot
-												index={1}
-												className='w-full dark:bg-primary-foreground bg-secondary'
-											/>
-											<InputOTPSlot
-												index={2}
-												className='w-full dark:bg-primary-foreground bg-secondary'
-											/>
+											<InputOTPSlot index={0} className='w-full bg-secondary' />
+											<InputOTPSlot index={1} className='w-full bg-secondary' />
+											<InputOTPSlot index={2} className='w-full bg-secondary' />
 										</InputOTPGroup>
 										<InputOTPSeparator />
 										<InputOTPGroup className='w-full '>
-											<InputOTPSlot
-												index={3}
-												className='w-full dark:bg-primary-foreground bg-secondary'
-											/>
-											<InputOTPSlot
-												index={4}
-												className='w-full dark:bg-primary-foreground bg-secondary'
-											/>
-											<InputOTPSlot
-												index={5}
-												className='w-full dark:bg-primary-foreground bg-secondary'
-											/>
+											<InputOTPSlot index={3} className='w-full bg-secondary' />
+											<InputOTPSlot index={4} className='w-full bg-secondary' />
+											<InputOTPSlot index={5} className='w-full bg-secondary' />
 										</InputOTPGroup>
 									</InputOTP>
 								</FormControl>
