@@ -1,10 +1,12 @@
 import { IUser } from '@/types'
-import { useState } from 'react'
+import { create } from 'zustand'
 
-const UseCurrentContact = () => {
-	const [currentContact, setCurrentContact] = useState<IUser | null>(null)
-
-	return { currentContact, setCurrentContact }
+type Store = {
+	currentContact: IUser | null
+	setCurrentContact: (contact: IUser | null) => void
 }
 
-export default UseCurrentContact
+export const useCurrentContact = create<Store>()(set => ({
+	currentContact: null,
+	setCurrentContact: contact => set({ currentContact: contact }),
+}))

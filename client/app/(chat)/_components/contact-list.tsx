@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
-import UseCurrentContact from '@/hooks/use-current'
+import { useCurrentContact } from '@/hooks/use-current'
 import { cn } from '@/lib/utils'
 import { IUser } from '@/types'
 import { useRouter } from 'next/navigation'
@@ -15,7 +15,7 @@ interface Props {
 
 const ContactList: FC<Props> = ({ contacts }) => {
 	const router = useRouter()
-	const { setCurrentContact, currentContact } = UseCurrentContact()
+	const { setCurrentContact, currentContact } = useCurrentContact()
 
 	const renderContact = (contact: IUser) => {
 		const onChat = () => {
