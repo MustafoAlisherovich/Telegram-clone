@@ -8,7 +8,9 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 import AddContact from './_components/add-contact'
+import Chat from './_components/chat'
 import ContactList from './_components/contact-list'
+import TopChat from './_components/top-chat'
 
 const HomePage = () => {
 	const { currentContact } = useCurrentContact()
@@ -48,8 +50,11 @@ const HomePage = () => {
 					/>
 				)}
 
+				{/* Top chat */}
+				<TopChat />
+
 				{/* Chat */}
-				{currentContact?._id && <div>Chat</div>}
+				{currentContact?._id && <Chat />}
 			</div>
 		</>
 	)
