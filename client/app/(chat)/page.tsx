@@ -1,7 +1,7 @@
 'use client'
 
 import { useCurrentContact } from '@/hooks/use-current'
-import { emailSchema } from '@/lib/validation'
+import { emailSchema, messageSchema } from '@/lib/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -23,11 +23,25 @@ const HomePage = () => {
 		},
 	})
 
+	const messageForm = useForm<z.infer<typeof messageSchema>>({
+		resolver: zodResolver(messageSchema),
+		defaultValues: {
+			text: '',
+			image: '',
+		},
+	})
+
 	useEffect(() => {
 		router.replace('/')
 	}, [])
 
 	const onCreateContact = (values: z.infer<typeof emailSchema>) => {
+		// API call to create contact
+		console.log(values)
+	}
+
+	const onSendMessage = (values: z.infer<typeof messageSchema>) => {
+		// API call to send message
 		console.log(values)
 	}
 
@@ -54,7 +68,9 @@ const HomePage = () => {
 				<TopChat />
 
 				{/* Chat */}
-				{currentContact?._id && <Chat />}
+				{currentContact?._id && (
+					<Chat messageForm={messageForm} onSendMessage={onSendMessage} />
+				)}
 			</div>
 		</>
 	)

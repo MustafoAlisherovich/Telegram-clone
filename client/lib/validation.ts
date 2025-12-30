@@ -13,3 +13,8 @@ export const otpSchema = z
 		}),
 	})
 	.merge(emailSchema)
+
+export const messageSchema = z.object({
+	text: z.string().min(1, { message: 'Message cannot by empty.' }),
+	image: z.string().optional(),
+})

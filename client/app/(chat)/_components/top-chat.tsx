@@ -1,5 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import {
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from '@/components/ui/sheet'
 import { useCurrentContact } from '@/hooks/use-current'
 import { Settings2 } from 'lucide-react'
 
@@ -43,9 +50,26 @@ const TopChat = () => {
 				</div>
 			</div>
 
-			<Button size={'icon'} variant={'secondary'}>
-				<Settings2 />
-			</Button>
+			<Sheet>
+				<SheetTrigger asChild>
+					<Button size={'icon'} variant={'secondary'}>
+						<Settings2 />
+					</Button>
+				</SheetTrigger>
+				<SheetContent>
+					<SheetHeader>
+						<SheetTitle />
+					</SheetHeader>
+					<div className='mx-auto w-1/2 h-36 relative'>
+						<Avatar>
+							<AvatarImage
+								src={currentContact?.avatar}
+								alt={currentContact?.email}
+							/>
+						</Avatar>
+					</div>
+				</SheetContent>
+			</Sheet>
 		</div>
 	)
 }
