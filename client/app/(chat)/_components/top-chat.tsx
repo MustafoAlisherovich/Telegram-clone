@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 import {
 	Sheet,
 	SheetContent,
@@ -9,6 +10,7 @@ import {
 } from '@/components/ui/sheet'
 import { useCurrentContact } from '@/hooks/use-current'
 import { Settings2 } from 'lucide-react'
+import Image from 'next/image'
 
 const TopChat = () => {
 	const { currentContact } = useCurrentContact()
@@ -60,13 +62,58 @@ const TopChat = () => {
 					<SheetHeader>
 						<SheetTitle />
 					</SheetHeader>
-					<div className='mx-auto w-1/2 h-36 relative'>
-						<Avatar>
+					<div className='mx-auto w-36 h-36 relative'>
+						<Avatar className='w-full h-full rounded-full'>
 							<AvatarImage
 								src={currentContact?.avatar}
 								alt={currentContact?.email}
+								className='object-cover'
 							/>
+							<AvatarFallback className='text-6xl uppercase'>
+								{currentContact?.email[0]}
+							</AvatarFallback>
 						</Avatar>
+					</div>
+
+					<Separator className='my-2' />
+
+					<h1 className='text-center capitalize text-xl'>
+						{currentContact?.email}
+					</h1>
+
+					<div className='flex flex-col space-y-1 ml-4'>
+						{currentContact?.firstName && (
+							<div className='flex items-center gap-1 mt-4'>
+								<p>First Name: </p>
+								<p>{currentContact?.firstName}</p>
+							</div>
+						)}
+						{currentContact?.lastName && (
+							<div className='flex items-center gap-1 mt-4'>
+								<p>Last Name: </p>
+								<p>{currentContact?.lastName}</p>
+							</div>
+						)}
+						{currentContact?.bio && (
+							<div className='flex items-center gap-1 mt-4'>
+								<p>About: </p>
+								<p className='text-muted-foreground'>{currentContact?.bio}</p>
+							</div>
+						)}
+
+						<Separator className='my-2' />
+
+						<h2 className='text-xl'>Image</h2>
+						<div className='flex flex-col space-y-2'>
+							<div className='w-full h-36 relative'>
+								<Image
+									src={'https://github.com/shadcn.png'}
+									alt='Profile Image'
+									fill
+									className='object-cover rounded-md'
+								/>
+							</div>
+						</div>
 					</div>
 				</SheetContent>
 			</Sheet>
