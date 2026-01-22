@@ -1,6 +1,57 @@
+const { CONST } = require('../lib/constants')
+const messageModel = require('../models/message.model')
+
 class UserController {
-	async contacts(req, res, next) {
-		res.json({ contacts: [] })
+	// GET
+	async getMessages(req, res, next) {
+		try {
+			const user = '69712cb9de41077ec5705131'
+			const { contactId } = req.params
+
+			const messages = await messageModel
+				.find({
+					$or: [
+						{ sender: user, receiver: contactId },
+						{ sender: contactId, receiver: user },
+					],
+				})
+				.populate({
+					path: 'sender',
+					select: 'email',
+				})
+				.populate({
+					path: 'receiver',
+					select: 'email',
+				})
+
+			await messageModel.updateMany(
+				{ sender: contactId, receiver: user, status: 'SENT' },
+				{ $set: { status: CONST.READ } },
+			)
+			res.status(200).json({ messages })
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	// POST
+	async createMessage(req, res, next) {
+		try {
+			const newMessage = await messageModel.create(req.body)
+			const currentMessage = await messageModel
+				.findById({ _id: newMessage._id })
+				.populate({
+					path: 'sender',
+					select: 'email',
+				})
+				.populate({
+					path: 'receiver',
+					select: 'email',
+				})
+			res.status(201).json({ newMessage: currentMessage })
+		} catch (error) {
+			next(error)
+		}
 	}
 }
 
