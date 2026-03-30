@@ -15,10 +15,15 @@ import {
 } from '@/components/ui/input-otp'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/use-auth'
+import { axiosClient } from '@/http/axios'
 import { otpSchema } from '@/lib/validation'
+import { IError, IUser } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
+import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import z from 'zod'
 
 const Verify = () => {
@@ -32,9 +37,30 @@ const Verify = () => {
 		},
 	})
 
+	const { mutate, isPending } = useMutation({
+		mutationFn: async (otp: string) => {
+			const { data } = await axiosClient.post<{ user: IUser }>(
+				'/api/auth/verify',
+				{ email, otp },
+			)
+			return data
+		},
+		onSuccess: ({ user }) => {
+			signIn('credentials', { email: user.email, callbackUrl: '/' })
+			toast.success('Your email has been verified successfully!')
+		},
+		onError: (error: IError) => {
+			if (error?.response?.data?.message) {
+				return toast.error(error.response.data.message)
+			}
+			return toast.error('Something went wrong. Please try again.')
+		},
+	})
+
 	function onSubmit(values: z.infer<typeof otpSchema>) {
-		console.log(values)
-		window.open('/', '_self')
+		mutate(values.otp)
+		// console.log(values)
+		// window.open('/', '_self')
 	}
 	return (
 		<div className='w-full'>
@@ -78,6 +104,7 @@ const Verify = () => {
 										{...field}
 										pattern={REGEXP_ONLY_DIGITS}
 										className='w-full'
+										disabled={isPending}
 									>
 										<InputOTPGroup className='w-full '>
 											<InputOTPSlot index={0} className='w-full bg-secondary' />
@@ -96,7 +123,12 @@ const Verify = () => {
 							</FormItem>
 						)}
 					/>
-					<Button type='submit' className='w-full' size={'lg'}>
+					<Button
+						type='submit'
+						className='w-full'
+						size={'lg'}
+						disabled={isPending}
+					>
 						Submit
 					</Button>
 				</form>

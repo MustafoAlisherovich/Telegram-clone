@@ -28,7 +28,7 @@ const ContactList: FC<Props> = ({ contacts }) => {
 			<div
 				className={cn(
 					'flex justify-between items-center cursor-pointer hover:bg-secondary/50 p-2',
-					currentContact?._id === contact._id && 'bg-secondary/50'
+					currentContact?._id === contact._id && 'bg-secondary/50',
 				)}
 				onClick={onChat}
 			>

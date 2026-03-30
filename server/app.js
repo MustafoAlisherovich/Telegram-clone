@@ -5,6 +5,7 @@ const http = require('http')
 const cookieParser = require('cookie-parser')
 const { default: mongoose } = require('mongoose')
 const errorMiddleware = require('./middlewares/error.middleware')
+const cors = require('cors')
 
 const app = express()
 
@@ -13,7 +14,14 @@ app.use(express.json())
 
 app.use('/api', require('./routes'))
 
+// Middleware
 app.use(errorMiddleware)
+app.use(
+	cors({
+		origin: process.env.CLIENT_URL,
+		methods: ['GET', 'POST', 'PUT', 'DELETE'],
+	}),
+)
 
 const bootstrap = async () => {
 	try {
