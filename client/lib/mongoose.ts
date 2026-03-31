@@ -1,4 +1,4 @@
-import mongoose, { ConnectOptions } from 'mongoose'
+import mongoose from 'mongoose'
 
 let isConnected: boolean = false
 
@@ -6,7 +6,7 @@ export const connectToDatabase = async () => {
 	mongoose.set('strictQuery', true)
 
 	if (!process.env.MONGO_URI) {
-		return console.log('MONGO_URI environment variable is not set')
+		return console.error('MONGO_URI is not defined')
 	}
 
 	if (isConnected) {
@@ -14,10 +14,9 @@ export const connectToDatabase = async () => {
 	}
 
 	try {
-		const options: ConnectOptions = { autoCreate: true }
-		await mongoose.connect(process.env.MONGO_URI!, options)
+		await mongoose.connect(process.env.MONGO_URI, { autoCreate: true })
 		isConnected = true
-	} catch (error) {
-		console.error('Error connecting to the database:', error)
+	} catch {
+		console.log('Error connecting to database')
 	}
 }

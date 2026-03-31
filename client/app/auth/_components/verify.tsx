@@ -31,10 +31,7 @@ const Verify = () => {
 
 	const form = useForm<z.infer<typeof otpSchema>>({
 		resolver: zodResolver(otpSchema),
-		defaultValues: {
-			email,
-			otp: ' ',
-		},
+		defaultValues: { email, otp: '	' },
 	})
 
 	const { mutate, isPending } = useMutation({
@@ -47,13 +44,13 @@ const Verify = () => {
 		},
 		onSuccess: ({ user }) => {
 			signIn('credentials', { email: user.email, callbackUrl: '/' })
-			toast.success('Your email has been verified successfully!')
+			toast.success('Verification successful')
 		},
 		onError: (error: IError) => {
-			if (error?.response?.data?.message) {
+			if (error.response?.data?.message) {
 				return toast.error(error.response.data.message)
 			}
-			return toast.error('Something went wrong. Please try again.')
+			return toast.error('Something went wrong')
 		},
 	})
 
@@ -62,6 +59,7 @@ const Verify = () => {
 		// console.log(values)
 		// window.open('/', '_self')
 	}
+
 	return (
 		<div className='w-full'>
 			<p className='text-muted-foreground text-sm text-center'>

@@ -23,9 +23,7 @@ const SignIn = () => {
 
 	const form = useForm<z.infer<typeof emailSchema>>({
 		resolver: zodResolver(emailSchema),
-		defaultValues: {
-			email: '',
-		},
+		defaultValues: { email: '' },
 	})
 
 	const { mutate, isPending } = useMutation({
@@ -39,13 +37,13 @@ const SignIn = () => {
 		onSuccess: res => {
 			setEmail(res.email)
 			setStep('verify')
-			toast.success('Email sent')
+			toast.success('OTP sent to your email')
 		},
 		onError: (error: IError) => {
-			if (error?.response?.data?.message) {
+			if (error.response?.data?.message) {
 				return toast.error(error.response.data.message)
 			}
-			return toast.error('Something went wrong. Please try again.')
+			return toast.error('Something went wrong')
 		},
 	})
 

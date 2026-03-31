@@ -11,17 +11,16 @@ const app = express()
 
 // Middleware
 app.use(express.json())
-
-app.use('/api', require('./routes'))
-
-// Middleware
-app.use(errorMiddleware)
 app.use(
 	cors({
 		origin: process.env.CLIENT_URL,
 		methods: ['GET', 'POST', 'PUT', 'DELETE'],
 	}),
 )
+
+app.use('/api', require('./routes'))
+
+app.use(errorMiddleware)
 
 const bootstrap = async () => {
 	try {

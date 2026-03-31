@@ -7,9 +7,7 @@ export const authOptions: NextAuthOptions = {
 	providers: [
 		Credentials({
 			name: 'Credentials',
-			credentials: {
-				email: { label: 'Email', type: 'email' },
-			},
+			credentials: { email: { label: 'Email', type: 'email' } },
 			async authorize(credentials) {
 				await connectToDatabase()
 				const user = await User.findOne({ email: credentials?.email })
