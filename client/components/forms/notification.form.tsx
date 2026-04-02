@@ -1,124 +1,206 @@
 import useAudio from '@/hooks/use-audio'
+import { axiosClient } from '@/http/axios'
 import { SOUNDS } from '@/lib/constants'
-import { cn } from '@/lib/utils'
-import { ChevronDown, PlayCircle } from 'lucide-react'
+import { generateToken } from '@/lib/generate-token'
+import { cn, getSoundLabel } from '@/lib/utils'
+import { useMutation } from '@tanstack/react-query'
+import { ChevronDown, Ghost, PlayCircle } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '../ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Separator } from '../ui/separator'
 import { Switch } from '../ui/switch'
 
 const NotificationForm = () => {
-	const [selectedSound, setSelectedSound] = useState('')
+	const [isNotification, setIsNotification] = useState(false)
+	const [isSounding, setIsSounding] = useState(false)
 
+	const [selectedNotificationSound, setSelectedNotificationSound] = useState('')
+	const [selectedSendingSound, setSelectedSendingSound] = useState('')
+
+	const { data: session, update } = useSession()
 	const { playSound } = useAudio()
 
-	const onPlaySound = (value: string) => {
-		setSelectedSound(value)
-		playSound(value)
-	}
+	const { mutate, isPending } = useMutation({
+		mutationFn: async (payload: IPayload) => {
+			const token = await generateToken(session?.currentUser?._id)
+			const { data } = await axiosClient.put('/api/user/profile', payload, {
+				headers: { Authorization: `Bearer ${token}` },
+			})
+			return data
+		},
+		onSuccess: async () => {
+			toast.success('Notification settings updated successfully')
+			await update()
+			setIsNotification(false)
+			setIsSounding(false)
+		},
+	})
 
 	return (
 		<>
-			<div className='flex items-center justify-between relative'>
+			<div className='relative flex items-center justify-between'>
 				<div className='flex flex-col'>
 					<p className='font-spaceGrotesk'>Notification Sound</p>
 					<p className='font-spaceGrotesk text-muted-foreground text-xs'>
-						Apple
+						{getSoundLabel(session?.currentUser?.notificationSound)}
 					</p>
 				</div>
 
-				<Popover>
+				<Popover open={isNotification} onOpenChange={setIsNotification}>
 					<PopoverTrigger asChild>
-						<Button size={'sm'}>
+						<Button size='sm'>
 							Select <ChevronDown />
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className='w-80 absolute -right-12'>
+
+					<PopoverContent className='absolute -right-12 w-80'>
 						<div className='flex flex-col space-y-1'>
 							{SOUNDS.map(sound => (
 								<div
+									key={sound.value}
 									className={cn(
-										'flex justify-between items-center bg-secondary cursor-pointer hover:bg-primary',
-										selectedSound === sound.value && 'bg-primary',
+										'flex cursor-pointer items-center justify-between bg-secondary hover:bg-primary',
+										selectedNotificationSound === sound.value && 'bg-primary',
 									)}
-									key={sound.label}
-									onClick={() => onPlaySound(sound.value)}
+									onClick={() => {
+										setSelectedNotificationSound(sound.value)
+										playSound(sound.value)
+									}}
 								>
 									<Button
-										size={'sm'}
-										className='justify-start cursor-pointer'
-										variant={'ghost'}
+										size='sm'
+										className='cursor-pointer justify-start'
+										variant='ghost'
 									>
 										{sound.label}
 									</Button>
-									<Button
-										size={'icon'}
-										variant={'ghost'}
-										className='cursor-pointer'
-									>
-										<PlayCircle />
-									</Button>
+
+									{session?.currentUser?.notificationSound === sound.value ? (
+										<Button size={'sm'}>
+											<Ghost />
+										</Button>
+									) : (
+										<Button
+											size='icon'
+											variant='ghost'
+											onClick={e => {
+												e.stopPropagation()
+												playSound(sound.value)
+											}}
+										>
+											<PlayCircle />
+										</Button>
+									)}
 								</div>
 							))}
 						</div>
-						<Button className='w-full mt-2 font-bold'>Submit</Button>
+
+						<Button
+							className='mt-2 w-full font-bold'
+							onClick={() =>
+								mutate({ notificatonSound: selectedNotificationSound })
+							}
+							disabled={isPending}
+						>
+							Submit
+						</Button>
 					</PopoverContent>
 				</Popover>
 			</div>
+
 			<Separator className='my-3' />
-			<div className='flex items-center justify-between relative'>
+
+			<div className='relative flex items-center justify-between'>
 				<div className='flex flex-col'>
 					<p className='font-spaceGrotesk'>Sending Sound</p>
 					<p className='font-spaceGrotesk text-muted-foreground text-xs'>
-						Apple
+						{getSoundLabel(session?.currentUser?.sendingSound)}
 					</p>
 				</div>
 
-				<Popover>
+				<Popover open={isSounding} onOpenChange={setIsSounding}>
 					<PopoverTrigger asChild>
-						<Button size={'sm'}>
+						<Button size='sm'>
 							Select <ChevronDown />
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className='w-80 absolute -right-12'>
+
+					<PopoverContent className='absolute -right-12 w-80'>
 						<div className='flex flex-col space-y-1'>
 							{SOUNDS.map(sound => (
 								<div
+									key={sound.value}
 									className={cn(
-										'flex justify-between items-center bg-secondary cursor-pointer hover:bg-primary',
-										selectedSound === sound.value && 'bg-primary',
+										'flex cursor-pointer items-center justify-between bg-secondary hover:bg-primary',
+										selectedSendingSound === sound.value && 'bg-primary',
 									)}
-									key={sound.label}
-									onClick={() => onPlaySound(sound.value)}
+									onClick={() => {
+										setSelectedSendingSound(sound.value)
+										playSound(sound.value)
+									}}
 								>
-									<Button
-										size={'sm'}
-										variant={'ghost'}
-										className='justify-start'
-									>
+									<Button size='sm' variant='ghost' className='justify-start'>
 										{sound.label}
 									</Button>
-									<Button size={'icon'} variant={'ghost'}>
-										<PlayCircle />
-									</Button>
+									{session?.currentUser?.sendingSound === sound.value ? (
+										<Button size={'sm'}>
+											<Ghost />
+										</Button>
+									) : (
+										<Button
+											size='icon'
+											variant='ghost'
+											onClick={e => {
+												e.stopPropagation()
+												playSound(sound.value)
+											}}
+										>
+											<PlayCircle />
+										</Button>
+									)}
 								</div>
 							))}
 						</div>
-						<Button className='w-full mt-2 font-bold'>Submit</Button>
+
+						<Button
+							className='mt-2 w-full font-bold'
+							onClick={() => mutate({ sendingSound: selectedSendingSound })}
+							disabled={isPending}
+						>
+							Submit
+						</Button>
 					</PopoverContent>
 				</Popover>
 			</div>
+
 			<Separator className='my-3' />
-			<div className='flex items-center justify-between relative'>
+
+			<div className='relative flex items-center justify-between'>
 				<div className='flex flex-col'>
 					<p>Mode Mute</p>
-					<p className='text-muted-foreground text-xs'>Muted</p>
+					<p className='text-muted-foreground text-xs'>
+						{!session?.currentUser?.muted ? 'Muted' : 'Unmuted'}
+					</p>
 				</div>
-				<Switch />
+				<Switch
+					checked={!session?.currentUser?.muted}
+					onCheckedChange={() =>
+						mutate({ muted: !session?.currentUser?.muted })
+					}
+					disabled={isPending}
+				/>
 			</div>
 		</>
 	)
 }
 
 export default NotificationForm
+
+interface IPayload {
+	notificatonSound?: string
+	sendingSound?: string
+	muted?: boolean
+}

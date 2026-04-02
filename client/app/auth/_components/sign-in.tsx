@@ -11,7 +11,6 @@ import { Label } from '@/components/ui/label'
 import { useAuth } from '@/hooks/use-auth'
 import { axiosClient } from '@/http/axios'
 import { emailSchema } from '@/lib/validation'
-import { IError } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
@@ -38,12 +37,6 @@ const SignIn = () => {
 			setEmail(res.email)
 			setStep('verify')
 			toast.success('OTP sent to your email')
-		},
-		onError: (error: IError) => {
-			if (error.response?.data?.message) {
-				return toast.error(error.response.data.message)
-			}
-			return toast.error('Something went wrong')
 		},
 	})
 

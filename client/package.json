@@ -25,6 +25,7 @@
 		"clsx": "^2.1.1",
 		"emoji-picker-react": "^4.16.1",
 		"input-otp": "^1.4.2",
+		"jsonwebtoken": "^9.0.3",
 		"lucide-react": "^0.546.0",
 		"mongoose": "^9.3.3",
 		"next": "16.0.0",
@@ -43,6 +44,7 @@
 	},
 	"devDependencies": {
 		"@tailwindcss/postcss": "^4",
+		"@types/jsonwebtoken": "^9.0.10",
 		"@types/node": "^20",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",

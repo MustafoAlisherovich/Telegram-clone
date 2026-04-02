@@ -47,14 +47,17 @@ const HomePage = () => {
 
 	return (
 		<>
+			{/* Sidebar */}
 			<div className='w-80 h-screen border-r fixed inset-0 z-50'>
+				{/* Loading */}
 				{/* <div className='w-full h-[95vh] flex justify-center items-center'>
-				<Loader2 size={50} className='animate-spin' />
-			</div> */}
+					<Loader2 size={50} className='animate-spin' />
+				</div> */}
+
 				{/* Contact list */}
 				<ContactList contacts={contacts} />
 			</div>
-
+			{/* Chat area */}
 			<div className='pl-80 w-full'>
 				{/* Add contact */}
 				{!currentContact?._id && (
@@ -64,12 +67,14 @@ const HomePage = () => {
 					/>
 				)}
 
-				{/* Top chat */}
-				<TopChat />
-
 				{/* Chat */}
 				{currentContact?._id && (
-					<Chat messageForm={messageForm} onSendMessage={onSendMessage} />
+					<div className='w-full relative'>
+						{/*Top Chat  */}
+						<TopChat />
+						{/* Chat messages */}
+						<Chat messageForm={messageForm} onSendMessage={onSendMessage} />
+					</div>
 				)}
 			</div>
 		</>
