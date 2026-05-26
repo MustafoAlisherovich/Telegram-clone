@@ -72,20 +72,20 @@ const Settings = () => {
 					<Button
 						variant={'secondary'}
 						size={'icon'}
-						className='cursor-pointer'
+						className='cursor-pointer border border-sidebar-border bg-background/80 shadow-none hover:bg-sidebar-accent'
 					>
 						<Menu />
 					</Button>
 				</PopoverTrigger>
-				<PopoverContent className='p-0 w-80'>
-					<h2 className='pt-2 pl-2 text-muted-foreground'>
+				<PopoverContent className='w-80 overflow-hidden border-sidebar-border p-0 shadow-xl'>
+					<h2 className='px-3 pt-3 text-xs font-medium text-muted-foreground'>
 						Settings:{' '}
-						<span className='text-white'>{session?.currentUser?.email}</span>
+						<span className='text-foreground'>{session?.currentUser?.email}</span>
 					</h2>
 					<Separator className='my-2' />
 					<div className='flex flex-col'>
 						<div
-							className='flex justify-between items-center p-2 hover:bg-secondary cursor-pointer'
+							className='flex cursor-pointer items-center justify-between px-3 py-2.5 transition-colors hover:bg-secondary'
 							onClick={() => setIsProfileOpen(true)}
 						>
 							<div className='flex items-center gap-1'>
@@ -95,7 +95,7 @@ const Settings = () => {
 						</div>
 
 						<div
-							className='flex justify-between items-center p-2 hover:bg-secondary cursor-pointer'
+							className='flex cursor-pointer items-center justify-between px-3 py-2.5 transition-colors hover:bg-secondary'
 							onClick={() => window.location.reload()}
 						>
 							<div className='flex items-center gap-1'>
@@ -104,7 +104,7 @@ const Settings = () => {
 							</div>
 						</div>
 
-						<div className='flex justify-between items-center p-2 hover:bg-secondary cursor-pointer'>
+						<div className='flex cursor-pointer items-center justify-between px-3 py-2.5 transition-colors hover:bg-secondary'>
 							<div className='flex items-center gap-1'>
 								<VolumeOff size={16} />
 								<span className='text-sm'>Mute</span>
@@ -116,7 +116,7 @@ const Settings = () => {
 							/>
 						</div>
 
-						<div className='flex justify-between items-center p-2 hover:bg-secondary cursor-pointer'>
+						<div className='flex cursor-pointer items-center justify-between px-3 py-2.5 transition-colors hover:bg-secondary'>
 							<div className='flex items-center gap-1'>
 								{resolvedTheme === 'dark' ? (
 									<Sun size={16} />
@@ -136,7 +136,7 @@ const Settings = () => {
 						</div>
 
 						<div
-							className='flex justify-between items-center p-2 bg-destructive cursor-pointer'
+							className='flex cursor-pointer items-center justify-between bg-destructive px-3 py-2.5 text-white transition-colors hover:bg-destructive/90'
 							onClick={() => signOut()}
 						>
 							<div className='flex items-center gap-1'>
@@ -149,7 +149,7 @@ const Settings = () => {
 			</Popover>
 
 			<Sheet open={isProfileOpen} onOpenChange={setIsProfileOpen}>
-				<SheetContent side='left' className='w-80'>
+				<SheetContent side='left' className='w-80 border-sidebar-border'>
 					<SheetHeader>
 						<SheetTitle className='text-2xl'>My profile</SheetTitle>
 						<SheetDescription>
@@ -160,11 +160,11 @@ const Settings = () => {
 
 					<Separator className='my-2' />
 					<div className='mx-auto w-1/2 h-38 relative'>
-						<Avatar className='w-full h-full'>
+						<Avatar className='h-full w-full ring-4 ring-secondary'>
 							<AvatarFallback className='text-6xl uppercase'>sb</AvatarFallback>
 						</Avatar>
 						<Button
-							className='absolute right-0 bottom-0 rounded-full'
+							className='absolute right-0 bottom-0 rounded-full shadow-lg'
 							size={'icon'}
 						>
 							<Upload size={16} />
@@ -173,7 +173,7 @@ const Settings = () => {
 
 					<Accordion type='single' collapsible className='mt-4'>
 						<AccordionItem value='item-1'>
-							<AccordionTrigger className='bg-secondary px-2'>
+							<AccordionTrigger className='rounded-md bg-secondary px-3'>
 								Basic information
 							</AccordionTrigger>
 							<AccordionContent className='px-2 mt-2'>
@@ -182,7 +182,7 @@ const Settings = () => {
 						</AccordionItem>
 
 						<AccordionItem value='item-2'>
-							<AccordionTrigger className='bg-secondary px-2'>
+							<AccordionTrigger className='rounded-md bg-secondary px-3'>
 								Email
 							</AccordionTrigger>
 							<AccordionContent className='px-2 mt-2'>
@@ -191,7 +191,7 @@ const Settings = () => {
 						</AccordionItem>
 
 						<AccordionItem value='item-3'>
-							<AccordionTrigger className='bg-secondary px-2'>
+							<AccordionTrigger className='rounded-md bg-secondary px-3'>
 								Notification
 							</AccordionTrigger>
 							<AccordionContent className='px-2 mt-2'>
@@ -200,7 +200,7 @@ const Settings = () => {
 						</AccordionItem>
 
 						<AccordionItem value='item-4'>
-							<AccordionTrigger className='bg-secondary px-2'>
+							<AccordionTrigger className='rounded-md bg-secondary px-3'>
 								Danger zone
 							</AccordionTrigger>
 							<AccordionContent className='px-2 mt-2'>

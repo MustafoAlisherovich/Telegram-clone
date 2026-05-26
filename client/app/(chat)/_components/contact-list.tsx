@@ -27,14 +27,15 @@ const ContactList: FC<Props> = ({ contacts }) => {
 		return (
 			<div
 				className={cn(
-					'flex justify-between items-center cursor-pointer hover:bg-secondary/50 p-2',
-					currentContact?._id === contact._id && 'bg-secondary/50',
+					'group mx-2 flex cursor-pointer items-center justify-between rounded-lg border border-transparent p-3 transition-all hover:border-sidebar-border hover:bg-sidebar-accent',
+					currentContact?._id === contact._id &&
+						'border-primary/20 bg-primary/10 shadow-sm',
 				)}
 				onClick={onChat}
 			>
-				<div className='flex items-center gap-2'>
+				<div className='flex min-w-0 items-center gap-3'>
 					<div className='relative'>
-						<Avatar className='z-40'>
+						<Avatar className='z-40 size-11 ring-2 ring-background'>
 							<AvatarImage
 								src={contact.avatar}
 								alt={contact.email}
@@ -44,10 +45,10 @@ const ContactList: FC<Props> = ({ contacts }) => {
 								{contact.email[0]}
 							</AvatarFallback>
 						</Avatar>
-						<div className='size-3 bg-green-500 absolute rounded-full bottom-0 right-0 z-50' />
+						<div className='absolute right-0 bottom-0 z-50 size-3 rounded-full border-2 border-sidebar bg-emerald-500' />
 					</div>
-					<div className=''>
-						<h2 className='capitalize line-clamp-1 text-sm'>
+					<div className='min-w-0'>
+						<h2 className='line-clamp-1 text-sm font-semibold capitalize'>
 							{contact.email.split('@')[0]}
 						</h2>
 						<p className='text-xs line-clamp-1 text-muted-foreground'>
@@ -56,34 +57,50 @@ const ContactList: FC<Props> = ({ contacts }) => {
 					</div>
 				</div>
 
-				<div className='self-end'>
-					<p className='text-xs text-muted-foreground'>19:20 pm</p>
+				<div className='self-start pl-2'>
+					<p className='text-[11px] font-medium text-muted-foreground'>19:20</p>
 				</div>
 			</div>
 		)
 	}
 
 	return (
-		<>
+		<div className='flex h-full flex-col'>
 			{/* Top bar */}
-			<div className='flex items-center bg-background pl-2 sticky top-0'>
-				<Settings />
-				<div className='m-2 w-full'>
-					<Input className='bg-secondary' type='text' placeholder='Search...' />
+			<div className='sticky top-0 z-10 border-b border-sidebar-border bg-sidebar/95 p-3 backdrop-blur'>
+				<div className='mb-3 flex items-center justify-between gap-3'>
+					<Settings />
+					<div className='min-w-0 flex-1'>
+						<h1 className='truncate text-base font-semibold'>Chats</h1>
+						<p className='text-xs text-muted-foreground'>
+							{contacts.length} contacts
+						</p>
+					</div>
+				</div>
+				<div className='w-full'>
+					<Input
+						className='h-10 border-sidebar-border bg-background/80 shadow-none'
+						type='text'
+						placeholder='Search messages or people'
+					/>
 				</div>
 			</div>
 
 			{/* Contacts */}
 			{contacts.length === 0 && (
-				<div className='w-full h-[95vh] flex justify-center items-center text-center text-muted-foreground'>
-					<p>Contact list is empty</p>
+				<div className='flex h-[80vh] w-full items-center justify-center px-8 text-center'>
+					<p className='text-sm leading-6 text-muted-foreground'>
+						Contact list is empty
+					</p>
 				</div>
 			)}
 
-			{contacts.map(contact => (
-				<div key={contact._id}>{renderContact(contact)}</div>
-			))}
-		</>
+			<div className='space-y-1 py-2'>
+				{contacts.map(contact => (
+					<div key={contact._id}>{renderContact(contact)}</div>
+				))}
+			</div>
+		</div>
 	)
 }
 

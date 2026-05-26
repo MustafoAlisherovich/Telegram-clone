@@ -46,13 +46,13 @@ const SignIn = () => {
 
 	return (
 		<div className='w-full'>
-			<p className='text-center text-muted-foreground text-sm'>
+			<p className='text-center text-sm leading-6 text-muted-foreground'>
 				Telegram is messaging app with a focus on speed and security, it&apos;s
 				super-fast, simple and free
 			</p>
 
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
+				<form onSubmit={form.handleSubmit(onSubmit)} className='mt-5 space-y-3'>
 					<FormField
 						control={form.control}
 						name='email'
@@ -62,7 +62,7 @@ const SignIn = () => {
 								<FormControl>
 									<Input
 										placeholder='info@mustafoalisherovich.ru'
-										className='h-10 bg-secondary'
+										className='h-11 bg-secondary/80 shadow-none'
 										{...field}
 										disabled={isPending}
 									/>
@@ -73,7 +73,7 @@ const SignIn = () => {
 					/>
 					<Button
 						type='submit'
-						className='w-full'
+						className='w-full shadow-none'
 						size={'lg'}
 						disabled={isPending}
 					>

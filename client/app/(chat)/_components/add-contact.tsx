@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useLoading } from '@/hooks/use-loading'
 import { emailSchema } from '@/lib/validation'
 import { FC } from 'react'
 import { UseFormReturn } from 'react-hook-form'
@@ -20,16 +21,29 @@ interface Props {
 }
 
 const AddContact: FC<Props> = ({ contactForm, onCreateContact }) => {
+	const { isCreating } = useLoading()
+
 	return (
-		<div className='h-screen w-full flex z-40 relative'>
-			<div className='flex justify-center items-center z-50 w-full'>
-				<div className='flex flex-col items-center gap-4'>
-					<FaTelegram size={120} className='dark:text-blue-400 text-blue-500' />
-					<h1 className='text-3xl font-bold'>Add contacts to start chatting</h1>
+		<div className='chat-surface relative z-40 flex h-screen w-full'>
+			<div className='z-50 flex w-full items-center justify-center px-6'>
+				<div className='w-full max-w-md rounded-lg border border-border bg-card/90 p-8 shadow-xl backdrop-blur'>
+					<div className='mb-6 flex flex-col items-center gap-4 text-center'>
+						<div className='flex size-24 items-center justify-center rounded-full bg-primary/10 text-primary ring-8 ring-primary/5'>
+							<FaTelegram size={58} />
+						</div>
+						<div className='space-y-2'>
+							<h1 className='text-2xl font-bold'>
+								Add contacts to start chatting
+							</h1>
+							<p className='text-sm leading-6 text-muted-foreground'>
+								Find someone by email and open a conversation.
+							</p>
+						</div>
+					</div>
 					<Form {...contactForm}>
 						<form
 							onSubmit={contactForm.handleSubmit(onCreateContact)}
-							className='space-y-2 w-full'
+							className='w-full space-y-3'
 						>
 							<FormField
 								control={contactForm.control}
@@ -40,15 +54,21 @@ const AddContact: FC<Props> = ({ contactForm, onCreateContact }) => {
 										<FormControl>
 											<Input
 												placeholder='info@mustafoalisherovich.ru'
-												className='h-10 bg-secondary'
+												className='h-11 bg-secondary/80 shadow-none'
 												{...field}
+												disabled={isCreating}
 											/>
 										</FormControl>
 										<FormMessage className='text-xs text-red-500' />
 									</FormItem>
 								)}
 							/>
-							<Button type='submit' className='w-full' size={'lg'}>
+							<Button
+								type='submit'
+								className='w-full shadow-none'
+								size={'lg'}
+								disabled={isCreating}
+							>
 								Submit
 							</Button>
 						</form>

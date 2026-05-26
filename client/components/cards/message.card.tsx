@@ -9,18 +9,20 @@ const MessageCard: FC<Props> = ({ isReceived }) => {
 	return (
 		<div
 			className={cn(
-				'm-2.5 font-medium text-xs flex',
-				isReceived ? 'justify-start' : 'justify-end'
+				'm-2.5 flex text-xs font-medium',
+				isReceived ? 'justify-start' : 'justify-end',
 			)}
 		>
 			<div
 				className={cn(
-					'relative inline p-2 pl-2.5 pr-12 max-w-full',
-					isReceived ? 'bg-primary' : 'bg-secondary'
+					'relative inline max-w-full rounded-lg px-3 py-2 pr-12 shadow-sm',
+					isReceived
+						? 'bg-card text-card-foreground'
+						: 'bg-primary text-primary-foreground',
 				)}
 			>
-				<p className='text-sm text-white'>Hello world</p>
-				<span className='text-xs right-1 bottom-0 absolute opacity-60'>✓</span>
+				<p className='text-sm'>Hello world</p>
+				<span className='absolute right-2 bottom-1 text-xs opacity-60'>sent</span>
 			</div>
 		</div>
 	)

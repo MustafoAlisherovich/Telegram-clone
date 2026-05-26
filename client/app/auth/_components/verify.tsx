@@ -56,7 +56,7 @@ const Verify = () => {
 
 	return (
 		<div className='w-full'>
-			<p className='text-muted-foreground text-sm text-center'>
+			<p className='text-center text-sm leading-6 text-muted-foreground'>
 				We have sent you an email with a verification code to your email
 				address. Please enter the code below.
 			</p>
@@ -64,7 +64,7 @@ const Verify = () => {
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className='w-full space-y-2'
+					className='mt-5 w-full space-y-3'
 				>
 					<FormField
 						control={form.control}
@@ -75,7 +75,7 @@ const Verify = () => {
 								<FormControl>
 									<Input
 										placeholder='info@mustafoalisherovich.ru'
-										className='h-10 bg-secondary'
+										className='h-11 bg-secondary/80 shadow-none'
 										{...field}
 										disabled
 									/>
@@ -98,16 +98,34 @@ const Verify = () => {
 										className='w-full'
 										disabled={isPending}
 									>
-										<InputOTPGroup className='w-full '>
-											<InputOTPSlot index={0} className='w-full bg-secondary' />
-											<InputOTPSlot index={1} className='w-full bg-secondary' />
-											<InputOTPSlot index={2} className='w-full bg-secondary' />
+										<InputOTPGroup className='w-full'>
+											<InputOTPSlot
+												index={0}
+												className='w-full bg-secondary/80'
+											/>
+											<InputOTPSlot
+												index={1}
+												className='w-full bg-secondary/80'
+											/>
+											<InputOTPSlot
+												index={2}
+												className='w-full bg-secondary/80'
+											/>
 										</InputOTPGroup>
 										<InputOTPSeparator />
-										<InputOTPGroup className='w-full '>
-											<InputOTPSlot index={3} className='w-full bg-secondary' />
-											<InputOTPSlot index={4} className='w-full bg-secondary' />
-											<InputOTPSlot index={5} className='w-full bg-secondary' />
+										<InputOTPGroup className='w-full'>
+											<InputOTPSlot
+												index={3}
+												className='w-full bg-secondary/80'
+											/>
+											<InputOTPSlot
+												index={4}
+												className='w-full bg-secondary/80'
+											/>
+											<InputOTPSlot
+												index={5}
+												className='w-full bg-secondary/80'
+											/>
 										</InputOTPGroup>
 									</InputOTP>
 								</FormControl>
@@ -117,7 +135,7 @@ const Verify = () => {
 					/>
 					<Button
 						type='submit'
-						className='w-full'
+						className='w-full shadow-none'
 						size={'lg'}
 						disabled={isPending}
 					>
