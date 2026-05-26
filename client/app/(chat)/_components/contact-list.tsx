@@ -6,7 +6,7 @@ import { useCurrentContact } from '@/hooks/use-current'
 import { cn } from '@/lib/utils'
 import { IUser } from '@/types'
 import { useRouter } from 'next/navigation'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import Settings from './settings'
 
 interface Props {
@@ -14,8 +14,14 @@ interface Props {
 }
 
 const ContactList: FC<Props> = ({ contacts }) => {
+	const [query, setQuery] = useState('')
+
 	const router = useRouter()
 	const { setCurrentContact, currentContact } = useCurrentContact()
+
+	const filteredContacts = contacts.filter(contact =>
+		contact.email.toLowerCase().includes(query.toLowerCase()),
+	)
 
 	const renderContact = (contact: IUser) => {
 		const onChat = () => {
@@ -82,24 +88,26 @@ const ContactList: FC<Props> = ({ contacts }) => {
 						className='h-10 border-sidebar-border bg-background/80 shadow-none'
 						type='text'
 						placeholder='Search messages or people'
+						onChange={e => setQuery(e.target.value)}
 					/>
 				</div>
 			</div>
 
-			{/* Contacts */}
-			{contacts.length === 0 && (
+			{filteredContacts.length === 0 ? (
 				<div className='flex h-[80vh] w-full items-center justify-center px-8 text-center'>
 					<p className='text-sm leading-6 text-muted-foreground'>
 						Contact list is empty
 					</p>
 				</div>
+			) : (
+				<div className='space-y-1 py-2'>
+					{filteredContacts.map(contact => (
+						<div key={contact._id}>{renderContact(contact)}</div>
+					))}
+				</div>
 			)}
 
-			<div className='space-y-1 py-2'>
-				{contacts.map(contact => (
-					<div key={contact._id}>{renderContact(contact)}</div>
-				))}
-			</div>
+			{/* Contacts */}
 		</div>
 	)
 }
