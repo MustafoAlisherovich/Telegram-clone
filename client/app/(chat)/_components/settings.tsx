@@ -43,6 +43,7 @@ import { signOut, useSession } from 'next-auth/react'
 import { useTheme } from 'next-themes'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import type { ClientUploadedFileData } from 'uploadthing/types'
 
 const Settings = () => {
 	const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -75,8 +76,11 @@ const Settings = () => {
 						<Menu />
 					</Button>
 				</PopoverTrigger>
-				<PopoverContent className='w-80 overflow-hidden border-sidebar-border p-0 shadow-xl'>
-					<h2 className='px-3 pt-3 text-xs font-medium text-muted-foreground'>
+				<PopoverContent
+					align='start'
+					className='w-[min(20rem,calc(100vw-1rem))] overflow-hidden border-sidebar-border p-0 shadow-xl'
+				>
+					<h2 className='break-words px-3 pt-3 text-xs font-medium text-muted-foreground'>
 						Settings:{' '}
 						<span className='text-foreground'>
 							{session?.currentUser?.email}
@@ -84,25 +88,27 @@ const Settings = () => {
 					</h2>
 					<Separator className='my-2' />
 					<div className='flex flex-col'>
-						<div
-							className='flex cursor-pointer items-center justify-between px-3 py-2.5 transition-colors hover:bg-secondary'
+						<button
+							type='button'
+							className='flex cursor-pointer items-center justify-between px-3 py-2.5 text-left transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none'
 							onClick={() => setIsProfileOpen(true)}
 						>
 							<div className='flex items-center gap-1'>
 								<Settings2 size={16} />
 								<span className='text-sm'>Profile</span>
 							</div>
-						</div>
+						</button>
 
-						<div
-							className='flex cursor-pointer items-center justify-between px-3 py-2.5 transition-colors hover:bg-secondary'
+						<button
+							type='button'
+							className='flex cursor-pointer items-center justify-between px-3 py-2.5 text-left transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none'
 							onClick={() => window.location.reload()}
 						>
 							<div className='flex items-center gap-1'>
 								<UserPlus size={16} />
 								<span className='text-sm'>Create contact</span>
 							</div>
-						</div>
+						</button>
 
 						<div className='flex cursor-pointer items-center justify-between px-3 py-2.5 transition-colors hover:bg-secondary'>
 							<div className='flex items-center gap-1'>
@@ -137,21 +143,25 @@ const Settings = () => {
 							/>
 						</div>
 
-						<div
-							className='flex cursor-pointer items-center justify-between bg-destructive px-3 py-2.5 text-white transition-colors hover:bg-destructive/90'
+						<button
+							type='button'
+							className='flex cursor-pointer items-center justify-between bg-destructive px-3 py-2.5 text-left text-white transition-colors hover:bg-destructive/90 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none'
 							onClick={() => signOut()}
 						>
 							<div className='flex items-center gap-1'>
 								<LogIn size={16} />
 								<span className='text-sm'>Logout</span>
 							</div>
-						</div>
+						</button>
 					</div>
 				</PopoverContent>
 			</Popover>
 
 			<Sheet open={isProfileOpen} onOpenChange={setIsProfileOpen}>
-				<SheetContent side='left' className='w-80 border-sidebar-border'>
+				<SheetContent
+					side='left'
+					className='w-full overflow-y-auto border-sidebar-border p-4 sm:w-80'
+				>
 					<SheetHeader>
 						<SheetTitle className='text-2xl'>My profile</SheetTitle>
 						<SheetDescription>
@@ -162,7 +172,7 @@ const Settings = () => {
 
 					<Separator className='my-2' />
 
-					<div className='mx-auto w-1/2 h-38 relative'>
+					<div className='relative mx-auto h-36 w-36 sm:h-40 sm:w-40'>
 						<Avatar className='h-full w-full ring-4 ring-secondary'>
 							<AvatarImage
 								src={session?.currentUser?.avatar}
@@ -173,7 +183,9 @@ const Settings = () => {
 						</Avatar>
 						<UploadButton
 							endpoint='imageUploader'
-							onClientUploadComplete={res => {
+							onClientUploadComplete={(
+								res: ClientUploadedFileData<null>[],
+							) => {
 								mutate({ avatar: res[0].url })
 							}}
 							config={{ appendOnPaste: true, mode: 'auto' }}

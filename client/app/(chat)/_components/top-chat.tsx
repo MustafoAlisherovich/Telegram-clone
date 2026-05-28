@@ -8,16 +8,35 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from '@/components/ui/sheet'
+import { useAuth } from '@/hooks/use-auth'
 import { useCurrentContact } from '@/hooks/use-current'
-import { Settings2 } from 'lucide-react'
+import { ArrowLeft, Settings2 } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 const TopChat = () => {
-	const { currentContact } = useCurrentContact()
+	const { currentContact, setCurrentContact } = useCurrentContact()
+	const router = useRouter()
+	const { onlineUsers } = useAuth()
+
+	const onBack = () => {
+		setCurrentContact(null)
+		router.push('/')
+	}
 
 	return (
-		<div className='sticky top-0 z-50 flex min-h-16 w-full items-center justify-between border-b border-border bg-background/90 px-4 py-3 shadow-sm backdrop-blur'>
+		<div className='sticky top-0 z-50 flex min-h-16 w-full items-center justify-between gap-3 border-b border-border bg-background/90 px-3 py-3 shadow-sm backdrop-blur sm:px-4'>
 			<div className='flex min-w-0 items-center'>
+				<Button
+					size='icon'
+					type='button'
+					variant='ghost'
+					className='mr-1 shrink-0 md:hidden'
+					onClick={onBack}
+					aria-label='Back to chats'
+				>
+					<ArrowLeft />
+				</Button>
 				<Avatar className='z-40 size-11 ring-2 ring-secondary'>
 					<AvatarImage
 						src={currentContact?.avatar}
@@ -44,14 +63,20 @@ const TopChat = () => {
 						</div>
 					</div> */}
 					{/* Online */}
-					{/* <p className='text-xs'>
-						<span className='text-green-500'>Online</span>
-					</p> */}
+
 					{/* Offline */}
-					<p className='flex items-center gap-1.5 text-xs text-muted-foreground'>
-						<span className='size-1.5 rounded-full bg-muted-foreground' />
-						Last seen recently
-					</p>
+					{onlineUsers.some(user => user._id === currentContact?._id) ? (
+						<p className='flex items-center gap-1.5 text-xs text-green-500'>
+							<span className='size-1.5 rounded-full text-green-500'>
+								Online
+							</span>
+						</p>
+					) : (
+						<p className='flex items-center gap-1.5 text-xs text-muted-foreground'>
+							<span className='size-1.5 rounded-full bg-muted-foreground' />
+							Last seen recently
+						</p>
+					)}
 				</div>
 			</div>
 
@@ -65,7 +90,7 @@ const TopChat = () => {
 						<Settings2 />
 					</Button>
 				</SheetTrigger>
-				<SheetContent className='border-border'>
+				<SheetContent className='w-full overflow-y-auto border-border p-4 sm:max-w-sm'>
 					<SheetHeader>
 						<SheetTitle />
 					</SheetHeader>
@@ -88,21 +113,21 @@ const TopChat = () => {
 						{currentContact?.email}
 					</h1>
 
-					<div className='ml-4 flex flex-col space-y-1'>
+					<div className='flex flex-col space-y-1 sm:ml-4'>
 						{currentContact?.firstName && (
-							<div className='mt-4 flex items-center gap-1'>
+							<div className='mt-4 flex flex-wrap items-center gap-1'>
 								<p className='font-medium'>First Name: </p>
-								<p>{currentContact?.firstName}</p>
+								<p className='break-words'>{currentContact?.firstName}</p>
 							</div>
 						)}
 						{currentContact?.lastName && (
-							<div className='mt-4 flex items-center gap-1'>
+							<div className='mt-4 flex flex-wrap items-center gap-1'>
 								<p className='font-medium'>Last Name: </p>
-								<p>{currentContact?.lastName}</p>
+								<p className='break-words'>{currentContact?.lastName}</p>
 							</div>
 						)}
 						{currentContact?.bio && (
-							<div className='mt-4 flex items-center gap-1'>
+							<div className='mt-4 flex flex-wrap items-center gap-1'>
 								<p className='font-medium'>About: </p>
 								<p className='text-muted-foreground'>{currentContact?.bio}</p>
 							</div>

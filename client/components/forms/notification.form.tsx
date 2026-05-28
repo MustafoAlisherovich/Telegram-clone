@@ -41,10 +41,10 @@ const NotificationForm = () => {
 
 	return (
 		<>
-			<div className='relative flex items-center justify-between'>
-				<div className='flex flex-col'>
+			<div className='relative flex items-center justify-between gap-3'>
+				<div className='min-w-0 flex flex-col'>
 					<p className='font-spaceGrotesk'>Notification Sound</p>
-					<p className='font-spaceGrotesk text-muted-foreground text-xs'>
+					<p className='font-spaceGrotesk truncate text-xs text-muted-foreground'>
 						{getSoundLabel(session?.currentUser?.notificationSound)}
 					</p>
 				</div>
@@ -56,7 +56,10 @@ const NotificationForm = () => {
 						</Button>
 					</PopoverTrigger>
 
-					<PopoverContent className='absolute -right-12 w-80'>
+					<PopoverContent
+						align='end'
+						className='w-[min(20rem,calc(100vw-1rem))]'
+					>
 						<div className='flex flex-col space-y-1'>
 							{SOUNDS.map(sound => (
 								<div
@@ -113,10 +116,10 @@ const NotificationForm = () => {
 
 			<Separator className='my-3' />
 
-			<div className='relative flex items-center justify-between'>
-				<div className='flex flex-col'>
+			<div className='relative flex items-center justify-between gap-3'>
+				<div className='min-w-0 flex flex-col'>
 					<p className='font-spaceGrotesk'>Sending Sound</p>
-					<p className='font-spaceGrotesk text-muted-foreground text-xs'>
+					<p className='font-spaceGrotesk truncate text-xs text-muted-foreground'>
 						{getSoundLabel(session?.currentUser?.sendingSound)}
 					</p>
 				</div>
@@ -128,7 +131,10 @@ const NotificationForm = () => {
 						</Button>
 					</PopoverTrigger>
 
-					<PopoverContent className='absolute -right-12 w-80'>
+					<PopoverContent
+						align='end'
+						className='w-[min(20rem,calc(100vw-1rem))]'
+					>
 						<div className='flex flex-col space-y-1'>
 							{SOUNDS.map(sound => (
 								<div
@@ -178,10 +184,10 @@ const NotificationForm = () => {
 
 			<Separator className='my-3' />
 
-			<div className='relative flex items-center justify-between'>
-				<div className='flex flex-col'>
+			<div className='relative flex items-center justify-between gap-3'>
+				<div className='min-w-0 flex flex-col'>
 					<p>Mode Mute</p>
-					<p className='text-muted-foreground text-xs'>
+					<p className='text-xs text-muted-foreground'>
 						{!session?.currentUser?.muted ? 'Muted' : 'Unmuted'}
 					</p>
 				</div>

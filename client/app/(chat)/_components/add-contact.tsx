@@ -24,15 +24,15 @@ const AddContact: FC<Props> = ({ contactForm, onCreateContact }) => {
 	const { isCreating } = useLoading()
 
 	return (
-		<div className='chat-surface relative z-40 flex h-screen w-full'>
-			<div className='z-50 flex w-full items-center justify-center px-6'>
-				<div className='w-full max-w-md rounded-lg border border-border bg-card/90 p-8 shadow-xl backdrop-blur'>
+		<div className='chat-surface relative z-40 flex h-full min-h-0 w-full overflow-y-auto'>
+			<div className='z-50 flex min-h-full w-full items-center justify-center px-4 py-6 sm:px-6'>
+				<div className='w-full max-w-md rounded-lg border border-border bg-card/90 p-5 shadow-xl backdrop-blur sm:p-8'>
 					<div className='mb-6 flex flex-col items-center gap-4 text-center'>
-						<div className='flex size-24 items-center justify-center rounded-full bg-primary/10 text-primary ring-8 ring-primary/5'>
-							<FaTelegram size={58} />
+						<div className='flex size-20 items-center justify-center rounded-full bg-primary/10 text-primary ring-8 ring-primary/5 sm:size-24'>
+							<FaTelegram className='size-12 sm:size-14' />
 						</div>
 						<div className='space-y-2'>
-							<h1 className='text-2xl font-bold'>
+							<h1 className='text-xl font-bold sm:text-2xl'>
 								Add contacts to start chatting
 							</h1>
 							<p className='text-sm leading-6 text-muted-foreground'>

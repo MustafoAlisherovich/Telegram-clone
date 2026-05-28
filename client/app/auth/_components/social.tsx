@@ -3,7 +3,7 @@ import { FaGithub, FaGoogle } from 'react-icons/fa'
 
 const Social = () => {
 	return (
-		<div className='mt-4 grid w-full grid-cols-2 gap-2'>
+		<div className='mt-4 grid w-full gap-2 sm:grid-cols-2'>
 			<Button variant={'outline'} className='shadow-none'>
 				<span>Sign up with google</span>
 				<FaGoogle />

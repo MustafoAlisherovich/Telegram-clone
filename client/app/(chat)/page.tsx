@@ -1,17 +1,20 @@
 'use client'
 
+import { useAuth } from '@/hooks/use-auth'
 import { useCurrentContact } from '@/hooks/use-current'
 import { useLoading } from '@/hooks/use-loading'
 import { axiosClient } from '@/http/axios'
 import { generateToken } from '@/lib/generate-token'
+import { cn } from '@/lib/utils'
 import { emailSchema, messageSchema } from '@/lib/validation'
 import { IError, IUser } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { io } from 'socket.io-client'
 import { toast } from 'sonner'
 import z from 'zod'
 import AddContact from './_components/add-contact'
@@ -21,10 +24,13 @@ import TopChat from './_components/top-chat'
 
 const HomePage = () => {
 	const [contacts, setContacts] = useState<IUser[]>([])
+
 	const { setIsCreating, setIsLoading, isLoading } = useLoading()
 	const { currentContact } = useCurrentContact()
 	const router = useRouter()
 	const { data: session } = useSession()
+	const socket = useRef<ReturnType<typeof io> | null>(null)
+	const { setOnlineUsers } = useAuth()
 
 	const contactForm = useForm<z.infer<typeof emailSchema>>({
 		resolver: zodResolver(emailSchema),
@@ -41,7 +47,7 @@ const HomePage = () => {
 		},
 	})
 
-	const getContacts = async () => {
+	const getContacts = useCallback(async () => {
 		setIsLoading(true)
 		const token = await generateToken(session?.currentUser?._id)
 		try {
@@ -55,17 +61,28 @@ const HomePage = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}
+	}, [session?.currentUser?._id, setIsLoading])
 
 	useEffect(() => {
 		router.replace('/')
-	}, [])
+		socket.current = io('ws://localhost:5000')
+		return () => {
+			socket.current?.disconnect()
+		}
+	}, [router])
 
 	useEffect(() => {
 		if (session?.currentUser?._id) {
+			socket.current?.emit('addOnlineUser', session.currentUser)
+			socket.current?.on(
+				'getOnlineUsers',
+				(data: { socketId: string; user: IUser }[]) => {
+					setOnlineUsers(data.map(item => item.user))
+				},
+			)
 			getContacts()
 		}
-	}, [session?.currentUser])
+	}, [getContacts, session?.currentUser])
 
 	const onCreateContact = async (values: z.infer<typeof emailSchema>) => {
 		setIsCreating(true)
@@ -95,12 +112,19 @@ const HomePage = () => {
 	}
 
 	return (
-		<div className='min-h-screen bg-background'>
+		<div className='h-dvh overflow-hidden bg-background'>
 			{/* Sidebar */}
-			<div className='fixed inset-y-0 left-0 z-50 h-screen w-full border-r border-sidebar-border bg-sidebar/95 shadow-sm backdrop-blur md:w-[360px]'>
+			<div
+				className={cn(
+					'fixed inset-y-0 left-0 z-50 h-dvh w-full border-r border-sidebar-border bg-sidebar/95 shadow-sm backdrop-blur transition-transform duration-300 ease-out md:w-[380px] md:translate-x-0',
+					currentContact?._id
+						? '-translate-x-full md:translate-x-0'
+						: 'translate-x-0',
+				)}
+			>
 				{/* Loading */}
 				{isLoading && (
-					<div className='flex h-[95vh] w-full items-center justify-center'>
+					<div className='flex h-full w-full items-center justify-center'>
 						<Loader2 size={42} className='animate-spin text-primary' />
 					</div>
 				)}
@@ -109,7 +133,12 @@ const HomePage = () => {
 				{!isLoading && <ContactList contacts={contacts} />}
 			</div>
 			{/* Chat area */}
-			<div className='min-h-screen w-full bg-background md:pl-[360px]'>
+			<div
+				className={cn(
+					'h-dvh min-w-0 overflow-hidden bg-background md:pl-[380px]',
+					!currentContact?._id && 'hidden md:block',
+				)}
+			>
 				{/* Add contact */}
 				{!currentContact?._id && (
 					<AddContact
@@ -120,7 +149,7 @@ const HomePage = () => {
 
 				{/* Chat */}
 				{currentContact?._id && (
-					<div className='w-full relative'>
+					<div className='relative flex h-full w-full min-w-0 flex-col'>
 						{/*Top Chat  */}
 						<TopChat />
 						{/* Chat messages */}

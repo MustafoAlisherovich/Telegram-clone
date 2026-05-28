@@ -27,7 +27,7 @@ import { Input } from '../ui/input'
 import { Separator } from '../ui/separator'
 
 const DangerZoneForm = () => {
-	const { data: session, update } = useSession()
+	const { data: session } = useSession()
 	const form = useForm<z.infer<typeof confirmTextSchema>>({
 		resolver: zodResolver(confirmTextSchema),
 		defaultValues: {

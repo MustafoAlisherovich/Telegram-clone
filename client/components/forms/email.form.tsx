@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
 import { signOut, useSession } from 'next-auth/react'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import z from 'zod'
 import { Button } from '../ui/button'
@@ -30,6 +30,10 @@ const EmailForm = () => {
 			email: '',
 			oldEmail: session?.currentUser?.email,
 		},
+	})
+	const newEmail = useWatch({
+		control: emailForm.control,
+		name: 'email',
 	})
 
 	const otpMutation = useMutation({
@@ -145,7 +149,7 @@ const EmailForm = () => {
 				<Input
 					className='h-10 bg-secondary'
 					disabled
-					value={emailForm.watch('email')}
+					value={newEmail}
 				/>
 				<FormField
 					control={otpForm.control}

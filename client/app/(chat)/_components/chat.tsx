@@ -40,7 +40,7 @@ const Chat: FC<Props> = ({ onSendMessage, messageForm }) => {
 	}
 
 	return (
-		<div className='chat-surface z-40 flex min-h-[calc(100vh-4rem)] flex-col justify-end'>
+		<div className='chat-surface z-40 flex min-h-0 flex-1 flex-col justify-end overflow-hidden'>
 			{/* Loading */}
 			{/* <ChatLoading /> */}
 			{/* Messages */}
@@ -60,7 +60,7 @@ const Chat: FC<Props> = ({ onSendMessage, messageForm }) => {
 			<Form {...messageForm}>
 				<form
 					onSubmit={messageForm.handleSubmit(onSendMessage)}
-					className='sticky bottom-0 flex w-full items-center gap-2 border-t border-border bg-background/90 p-3 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur'
+					className='sticky bottom-0 flex w-full items-center gap-2 border-t border-border bg-background/90 p-2.5 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur sm:p-3'
 				>
 					<Button
 						size={'icon'}
@@ -79,7 +79,7 @@ const Chat: FC<Props> = ({ onSendMessage, messageForm }) => {
 									<Input
 										placeholder='Type a message...'
 										{...field}
-										className='h-11 rounded-lg border-border bg-secondary/80 px-4 shadow-none'
+										className='h-11 rounded-lg border-border bg-secondary/80 px-3 shadow-none sm:px-4'
 										value={field.value}
 										onBlur={() => field.onBlur()}
 										onChange={e => field.onChange(e.target.value)}
@@ -100,7 +100,11 @@ const Chat: FC<Props> = ({ onSendMessage, messageForm }) => {
 								<Smile />
 							</Button>
 						</PopoverTrigger>
-						<PopoverContent className='absolute right-3 bottom-0 rounded-lg border-none p-0 shadow-xl'>
+						<PopoverContent
+							align='end'
+							side='top'
+							className='w-[min(22rem,calc(100vw-1rem))] rounded-lg border-none p-0 shadow-xl'
+						>
 							<EmojiPicker
 								theme={resolvedTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
 								onEmojiClick={emoji => {
